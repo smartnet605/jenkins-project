@@ -1,84 +1,17 @@
-# SpringCT Simple Login Project
-nodejs and mysql login and signup project
-<h2>Update database values</h2>
-"Change db values with your db details"
-<h3>config/database.js</h3>
+# SpringCT  Project
 
+<h2>Update database values</h2>
+- Change db values with your db details in following file.
+
+<pre>config/database.js </pre>
+
+<h2>Install node modules</h2>
 
 <pre>npm install </pre>
+
+<h2>Start the server</h2>
 <pre>node server.js</pre>
 
-<h2>How is running</h2>
+<h2>Check server</h2>
 
-<h4>click localhost:300/signup</h4>
-<pre>
-app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect: '/login',
-        failureRedirect: '/signup',
-        failureFlash : true
-}));
-</pre>
-<h4>sign up </h4>
-<pre>
-passport.use(
-        'local-signup',
-        new LocalStrategy({
-
-            usernameField : 'username',
-            passwordField : 'password',
-            passReqToCallback : true
-        },
-        function(req, username, password, done) {
-
-            connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows) {
-                if (err)
-                    return done(err);
-                if (rows.length) {
-                    return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
-                } else {
-
-                    var newUserMysql = {
-                        username: username,
-                        password: bcrypt.hashSync(password, null, null)
-                    };
-
-                    var insertQuery = "INSERT INTO users ( username, password ) values (?,?)";
-
-                    connection.query(insertQuery,[newUserMysql.username, newUserMysql.password],function(err, rows) {
-                        newUserMysql.id = rows.insertId;
-
-                        return done(null, newUserMysql);
-                    });
-                }
-            });
-        })
- );
-</pre>
-<h4>Sign in</h4>
-<pre>
-passport.use(
-        'local-login',
-        new LocalStrategy({
-
-            usernameField : 'username',
-            passwordField : 'password',
-            passReqToCallback : true
-        },
-        function(req, username, password, done) {
-            connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows){
-                if (err)
-                    return done(err);
-                if (!rows.length) {
-                    return done(null, false, req.flash('loginMessage', 'bulunamadi.'));
-                }
-
-
-                if (!bcrypt.compareSync(password, rows[0].password))
-                    return done(null, false, req.flash('loginMessage', 'yanlis parola.'));
-
-
-                return done(null, rows[0]);
-            });
-        })
-    );
-</pre>
+<h4>http://localhost:3000</h4>
