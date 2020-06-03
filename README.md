@@ -1,4 +1,4 @@
-# SpringCT  Project
+# Test Project
 
 <h2>Update the Database Values</h2>
 
