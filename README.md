@@ -20,4 +20,4 @@
 
 - After register click on login .
 
-- Use user name and password to login.
+- Use username and password to login.
