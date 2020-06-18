@@ -1,7 +1,7 @@
 // config/database.js
 module.exports = {
     'connection': {
-        'host': '127.0.0.1', //
+        'host': '172.24.8.47', //
         'user': 'root', //
         'password': 'root', //
         'database': 'test'//
