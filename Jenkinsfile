@@ -35,7 +35,7 @@ pipeline {
                     sh 'docker rm -f your-app-container'
 
                     // Run the new Docker container from the built image
-                    sh 'docker run -d --name your-app-container -p 8080:80 ${IMAGE_NAME}:${DOCKER_TAG}'
+                    sh 'docker run -d --name your-app-container -p 8090:80 ${IMAGE_NAME}:${DOCKER_TAG}'
                 }
             }
         }
