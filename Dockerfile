@@ -1,20 +1,14 @@
-# Use Node.js LTS version as the base image
-FROM node:lts
+# Use official Nginx image as the base
+FROM nginx:alpine
 
 # Set the working directory
-WORKDIR /usr/src/app
+WORKDIR /usr/share/nginx/html
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application code
+# Copy the website files into the Docker container
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 3000
+# Expose port 80 to the outside world
+EXPOSE 80
 
-# Start the application
-CMD ["npm", "start"]
+# Run the Nginx server
+CMD ["nginx", "-g", "daemon off;"]
