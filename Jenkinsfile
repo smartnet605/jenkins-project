@@ -12,7 +12,7 @@ pipeline {
         stage('Clone GitHub Repository') {
             steps {
                 // Pull the latest code from GitHub repository
-                git url: "${GITHUB_REPO}", branch: 'main'
+                git url: "${GITHUB_REPO}", branch: 'master'
             }
         }
 
