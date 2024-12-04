@@ -3,16 +3,15 @@ pipeline {
 
     environment {
         // Set variables for repository, Docker image, etc.
-        GITHUB_REPO = ''https://github.com/smartnet605/jenkins-project.git/
-        IMAGE_NAME = 'app-image'
-        DOCKER_REGISTRY = 'docker.io'  // Set this if you're using a custom registry
+        GITHUB_REPO = 'https://github.com/smartnet605/jenkins-project.git' // Replace with your actual GitHub repository
+        IMAGE_NAME = 'your-app-image'
         DOCKER_TAG = 'latest'
     }
 
     stages {
         stage('Clone GitHub Repository') {
             steps {
-                // Pull the latest code from the GitHub repository
+                // Pull the latest code from GitHub repository
                 git url: "${GITHUB_REPO}", branch: 'main'
             }
         }
@@ -20,19 +19,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build Docker image
+                    // Build Docker image using the Dockerfile in the repository
                     docker.build("${IMAGE_NAME}:${DOCKER_TAG}")
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    // Push Docker image to Docker registry (optional)
-                    docker.withRegistry("https://${DOCKER_REGISTRY}", 'dockerhub-credentials') {
-                        docker.image("${IMAGE_NAME}:${DOCKER_TAG}").push()
-                    }
                 }
             }
         }
@@ -46,7 +34,7 @@ pipeline {
                     // Remove the old container if exists
                     sh 'docker rm -f your-app-container'
 
-                    // Run the new Docker container
+                    // Run the new Docker container from the built image
                     sh 'docker run -d --name your-app-container -p 8080:80 ${IMAGE_NAME}:${DOCKER_TAG}'
                 }
             }
