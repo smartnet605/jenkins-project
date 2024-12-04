@@ -5,7 +5,7 @@ FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 
 # Copy the website files into the Docker container
-COPY . .
+COPY ./index.html .
 
 # Expose port 80 to the outside world
 EXPOSE 80
