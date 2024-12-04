@@ -12,11 +12,11 @@ pipeline {
             }
         }
         stage('Install Dependencies') {
-            steps {
-                echo 'Installing dependencies...'
-                sh 'npm install'
-            }
-        }
+    steps {
+        echo 'Installing dependencies...'
+        sh 'npm config set cache $(pwd)/.npm-cache --global && npm install'
+    }
+}
         stage('Run Tests') {
             steps {
                 echo 'Running tests...'
