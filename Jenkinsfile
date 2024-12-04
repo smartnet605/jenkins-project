@@ -1,47 +1,55 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:lts'
-        }
+    agent any
+
+    environment {
+        // Set variables for repository, Docker image, etc.
+        GITHUB_REPO = ''https://github.com/smartnet605/jenkins-project.git/
+        IMAGE_NAME = 'app-image'
+        DOCKER_REGISTRY = 'docker.io'  // Set this if you're using a custom registry
+        DOCKER_TAG = 'latest'
     }
+
     stages {
-        stage('Checkout') {
+        stage('Clone GitHub Repository') {
             steps {
-                echo 'Checking out the code...'
-                checkout scm
+                // Pull the latest code from the GitHub repository
+                git url: "${GITHUB_REPO}", branch: 'main'
             }
         }
-        stage('Install Dependencies') {
-    steps {
-        echo 'Installing dependencies...'
-        sh 'npm config set cache $(pwd)/.npm-cache --global && npm install'
-    }
-}
-        stage('Run Tests') {
-            steps {
-                echo 'Running tests...'
-                sh 'npm test || echo "Tests failed, but continuing for now."'
-            }
-        }
+
         stage('Build Docker Image') {
             steps {
-                echo 'Building Docker image...'
-                sh 'docker build -t nodejs-app .'
+                script {
+                    // Build Docker image
+                    docker.build("${IMAGE_NAME}:${DOCKER_TAG}")
+                }
             }
         }
-        stage('Deploy') {
+
+        stage('Push Docker Image') {
             steps {
-                echo 'Deploying Docker container...'
-                sh 'docker run -d --name nodejs-app -p 3000:3000 nodejs-app'
+                script {
+                    // Push Docker image to Docker registry (optional)
+                    docker.withRegistry("https://${DOCKER_REGISTRY}", 'dockerhub-credentials') {
+                        docker.image("${IMAGE_NAME}:${DOCKER_TAG}").push()
+                    }
+                }
             }
         }
-    }
-    post {
-        success {
-            echo 'Build and deployment completed successfully!'
-        }
-        failure {
-            echo 'Build failed!'
+
+        stage('Deploy Website in Docker') {
+            steps {
+                script {
+                    // Stop any running container with the same name
+                    sh 'docker ps -q --filter "name=your-app-container" | xargs --no-run-if-empty docker stop'
+
+                    // Remove the old container if exists
+                    sh 'docker rm -f your-app-container'
+
+                    // Run the new Docker container
+                    sh 'docker run -d --name your-app-container -p 8080:80 ${IMAGE_NAME}:${DOCKER_TAG}'
+                }
+            }
         }
     }
 }
